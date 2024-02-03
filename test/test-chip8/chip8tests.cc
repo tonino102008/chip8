@@ -307,7 +307,11 @@ TEST(Display, InitCloseFb) {
 
 TEST(Display, DrawFb) {
     init_fb();
-    draw();
+    clean_screen();
+    sleep(2);
+    draw_screen();
+    sleep(2);
+    clean_screen();
     close_fb();
 }
 
