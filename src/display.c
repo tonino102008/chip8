@@ -57,7 +57,7 @@ void init_fb() {
         exit(1);
     }
     unsigned long off = fbfs.smem_start % (unsigned long)sysconf(_SC_PAGESIZE);
-    Screen screen = {   .phys_res_x = MAX_DISP_COL,
+    screen = (Screen){  .phys_res_x = MAX_DISP_COL,
                         .phys_res_y = MAX_DISP_ROW,
                         .virt_res_x = MAX_VDISP_COL,
                         .virt_res_y = MAX_VDISP_ROW,
