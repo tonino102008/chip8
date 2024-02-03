@@ -56,7 +56,8 @@ void init_fb() {
         close_fb();
         exit(1);
     }
-    screen_data = start_mmap_fb + fbfs.smem_start;
+    unsigned long off = fbfs.smem_start % (unsigned long)sysconf(_SC_PAGESIZE);
+    screen_data = start_mmap_fb + off;
     printf("Screen dimensions: %d x %d\n", fbvs.xres, fbvs.yres);
 }
 
