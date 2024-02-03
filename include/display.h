@@ -9,7 +9,7 @@
 #define MAX_DISP_ROW 32
 #define MAX_VDISP_COL MAX_DISP_COL * 5
 #define MAX_VDISP_ROW MAX_DISP_ROW * 5
-#define FB_OFF_COL 1024 - MAX_VDISP_COL
+#define FB_OFF_COL (1024 - MAX_VDISP_COL) / 2
 #define FB_OFF_ROW (768 - MAX_VDISP_ROW) / 2
 #define MAX_SPRITES 80
 
@@ -21,6 +21,8 @@ typedef struct {
     int phys_res_y;
     int virt_res_x;
     int virt_res_y;
+    int virt_off_x;
+    int virt_off_y;
     int r_off;
     int g_off;
     int b_off;

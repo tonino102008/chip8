@@ -61,6 +61,8 @@ void init_fb() {
                         .phys_res_y = MAX_DISP_ROW,
                         .virt_res_x = MAX_VDISP_COL,
                         .virt_res_y = MAX_VDISP_ROW,
+                        .virt_off_x = FB_OFF_COL,
+                        .virt_off_y = FB_OFF_ROW,
                         .r_off = fbvs.red.offset/fbvs.red.length,
                         .g_off = fbvs.green.offset/fbvs.green.length,
                         .b_off = fbvs.blue.offset/fbvs.blue.length,
@@ -82,24 +84,23 @@ void close_fb() {
 
 void setPixel(int x, int y, int black) {
     int off = y * fbfs.line_length + x * (fbvs.bits_per_pixel >> 3);
-    if (black > 0 || black < 0) black = 1;
     *(screen.data + off + screen.r_off) = 0xff * black;
     *(screen.data + off + screen.g_off) = 0xff * black;
     *(screen.data + off + screen.b_off) = 0xff * black;
 }
 
 void draw_screen() {
-    for (int i = FB_OFF_COL; i < MAX_VDISP_COL; i++) {
-        for (int j = FB_OFF_ROW; i < MAX_VDISP_ROW; j++) {
-            setPixel(i, j, 0);
+    for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
+        for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
+            setPixel(i, j, 0x00);
         }
     }
 }
 
 void clean_screen() {
-    for (int i = FB_OFF_COL; i < MAX_VDISP_COL; i++) {
-        for (int j = FB_OFF_ROW; i < MAX_VDISP_ROW; j++) {
-            setPixel(i, j, 1);
+    for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
+        for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
+            setPixel(i, j, 0x01);
         }
     }
 }
