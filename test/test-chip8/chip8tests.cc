@@ -300,4 +300,9 @@ TEST(Display, InitMemory) {
     for (int i = 0; i < MAX_SPRITES; i++) EXPECT_EQ(sprites[i], memory[i]);
 }
 
+TEST(Display, InitFb) {
+    init_fb();
+    close_fb();
+}
+
 }
