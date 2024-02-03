@@ -66,9 +66,6 @@ void close_fb() {
             perror("Error unmapping /dev/fb0 to memory in close_fb()");
         }
     }
-    if (screen_data) {
-        free(screen_data);
-    }
     if (close(fd) == -1) {
         perror("Error closing /dev/fb0 in close_fb()");
         exit(1);
@@ -77,10 +74,12 @@ void close_fb() {
 
 void setPixel(int x, int y) {
     // FOR NOW ONLY ROW 0 - COL X
-    *(screen_data + (sizeof(struct fb_bitfield) * x) + 3 * sizeof(__u32)) = 0;
-    *(screen_data + (sizeof(struct fb_bitfield) * x) + 6 * sizeof(__u32)) = 0;
-    *(screen_data + (sizeof(struct fb_bitfield) * x) + 9 * sizeof(__u32)) = 0;
-    *(screen_data + (sizeof(struct fb_bitfield) * x) + 12 * sizeof(__u32)) = 0;
+    unsigned long rOff = fbvs.red.offset/fbvs.red.length;
+    unsigned long bOff = fbvs.blue.offset/fbvs.blue.length;
+    unsigned long gOff = fbvs.green.offset/fbvs.green.length;
+    *(screen_data + x + rOff) = 0xff;
+    *(screen_data + x + bOff) = 0x00;
+    *(screen_data + x + gOff) = 0x00;
 }
 
 void draw() {
