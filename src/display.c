@@ -45,7 +45,7 @@ void init_fb() {
         perror("Error getting FSCREENINFO from /dev/fb0 in init_fb()");
         exit(0);
     }
-    printf("Screen dimensions: %d x %d\n", fbvs.width, fbvs.height);
+    printf("Screen dimensions: %d x %d\n", fbvs.xres, fbvs.yres);
 }
 
 void close_fb() {
