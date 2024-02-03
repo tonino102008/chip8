@@ -12,11 +12,15 @@
 extern byte_t display[MAX_DISP_ROW * MAX_DISP_COL];
 extern byte_t sprites[MAX_SPRITES];
 
-extern int fb;
+extern int fd;
+extern unsigned long *start_mmap_fb;
+extern unsigned long *screen_data;
 extern struct fb_fix_screeninfo fbfs;
 extern struct fb_var_screeninfo fbvs;
 
 void init_fb();
 void close_fb();
+void setPixel(int x, int y); // x, y refers to x, y screen resolution coordinates
+void draw();
 
 #endif // DISPLAY_H_
