@@ -178,12 +178,14 @@ void opcode_switch(word_t opcode) {
             V[(opcode & 0x0F00) >> 8] = (byte_t)rand() & (byte_t)(opcode & 0x00FF);
             printf("Result: X = %04x\n", V[(opcode & 0x0F00) >> 8]);
             break;
-        case 0xD000:
+        case 0xD000: // TO BE CAREFULLY CHECKED
             printf("OpCode: 0x%04x - X = %04x - Y = %04x\n", opcode, (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
-            for (byte_t i = 0; i < (opcode & 0x000F); i++) {
-                for (byte_t j = 0; j < 0x08; j++) {
+            for (byte_t i = 0x00; i < (opcode & 0x000F); i++) {
+                for (byte_t j = 0x00; j < 0x08; j++) {
                     setVPixel(screen.virt_off_x, screen.virt_off_y,
-                                V[(opcode & 0x0F00) >> 8] + i, V[(opcode & 0x00F0) >> 4] + j, (memory[I + i] >> j) & 0x01);
+                                (V[(opcode & 0x00F0) >> 4] + j) % screen.phys_res_x, 
+                                (V[(opcode & 0x0F00) >> 8] + i) % screen.phys_res_y, 
+                                (memory[I + i] >> (0x08 - j)) & 0x01);
                 }
             }
             printf("Screen drawn.\n");
