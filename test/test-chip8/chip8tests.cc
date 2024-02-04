@@ -287,11 +287,11 @@ TEST(System, OpCode0xDXYF) {
     memory[PC + 1] = 0x2F;
     I = 0x0000;
     word_t opcode = (memory[PC] << 8) | memory[PC+1];
-    clean_screen();
+    clean_Vscreen();
     sleep(2);
     opcode_switch(opcode);
     sleep(2);
-    clean_screen();
+    clean_Vscreen();
     close_fb();
 }
 

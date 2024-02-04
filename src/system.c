@@ -182,7 +182,8 @@ void opcode_switch(word_t opcode) {
             printf("OpCode: 0x%04x - X = %04x - Y = %04x\n", opcode, (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
             for (byte_t i = 0; i < (opcode & 0x000F); i++) {
                 for (byte_t j = 0; j < 0x08; j++) {
-                    setPixel(V[(opcode & 0x0F00) >> 8] + i, V[(opcode & 0x00F0) >> 4] + j, (memory[I + i] >> j) & 0x01);
+                    setVPixel(screen.virt_off_x, screen.virt_off_y,
+                                V[(opcode & 0x0F00) >> 8] + i, V[(opcode & 0x00F0) >> 4] + j, (memory[I + i] >> j) & 0x01);
                 }
             }
             printf("Screen drawn.\n");
