@@ -191,6 +191,55 @@ void opcode_switch(word_t opcode) {
             }
             printf("Screen drawn.\n");
             break;
+        case 0xE000:
+            switch (opcode & 0x00F0) {
+                case 0x0090:
+                    switch (opcode & 0x000F) {
+                        case 0x000E:
+                            char ch;
+                            do {
+                                ch = getch();
+                                if (ch >= '0' && ch <= '9') {
+                                    ch -= '0';
+                                }
+                                if (ch >= 'a' && ch <= 'f') {
+                                    ch -= 'a' - 0x0A;
+                                }
+                                printf("The pressed key %02x is not in range 0 - f.\n", ch);
+                            } while (1);
+                            if (ch == V[(opcode & 0x0F00) >> 8]) PC += 0x0002;
+                        break;
+                        default:
+                            printf("Unsupported OpCode: 0x%04x\n", opcode);
+                            exit(0);
+                    }
+                break;
+                case 0x00A0:
+                    switch (opcode & 0x000F) {
+                        case 0x0001:
+                            char ch;
+                            do {
+                                ch = getch();
+                                if (ch >= '0' && ch <= '9') {
+                                    ch -= '0';
+                                }
+                                if (ch >= 'a' && ch <= 'f') {
+                                    ch -= 'a' - 0x0A;
+                                }
+                                printf("The pressed key %02x is not in range 0 - f.\n", ch);
+                            } while (1);
+                            if (ch != V[(opcode & 0x0F00) >> 8]) PC += 0x0002;
+                        break;
+                        default:
+                            printf("Unsupported OpCode: 0x%04x\n", opcode);
+                            exit(0);
+                    }
+                break;
+                default:
+                    printf("Unsupported OpCode: 0x%04x\n", opcode);
+                    exit(0);
+            }
+            break;
         case 0xF000:
             switch (opcode & 0x00F0) {
                 case 0x0000:
@@ -203,13 +252,13 @@ void opcode_switch(word_t opcode) {
                         case 0x000A:
                             printf("OpCode: 0x%04x - X = %02x\n", opcode, (opcode & 0x0F00) >> 8);
                             do {
-                                V[(opcode & 0x0F00) >> 8] = getche();
+                                V[(opcode & 0x0F00) >> 8] = getch();
                                 if (V[(opcode & 0x0F00) >> 8] >= '0' && V[(opcode & 0x0F00) >> 8] <= '9') {
                                     V[(opcode & 0x0F00) >> 8] -= '0';
                                     break;
                                 }
                                 if (V[(opcode & 0x0F00) >> 8] >= 'a' && V[(opcode & 0x0F00) >> 8] <= 'f') {
-                                    V[(opcode & 0x0F00) >> 8] -= 'a' + 0x0A;
+                                    V[(opcode & 0x0F00) >> 8] -= 'a' - 0x0A;
                                     break;
                                 }
                                 printf("The pressed key %02x is not in range 0 - f.\n", V[(opcode & 0x0F00) >> 8]);

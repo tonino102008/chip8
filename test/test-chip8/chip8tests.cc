@@ -295,6 +295,22 @@ TEST(System, OpCode0xDXYF) {
     close_fb();
 }
 
+TEST(System, OpCode0xEX9E) {
+    V[0x01] = 0x01;
+    memory[PC] = 0xE1;
+    memory[PC + 1] = 0x9E;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+}
+
+TEST(System, OpCode0xEXA1) {
+    V[0x01] = 0x01;
+    memory[PC] = 0xE1;
+    memory[PC + 1] = 0xA1;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+}
+
 TEST(System, OpCode0xFX07) {
     V[0x01] = 0x01;
     memory[PC] = 0xF1;
