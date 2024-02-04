@@ -48,6 +48,16 @@ TEST(Display, DrawFb) {
     close_fb();
 }
 
+TEST(Display, DrawVFb) {
+    init_fb();
+    clean_Vscreen();
+    sleep(2);
+    draw_Vscreen();
+    sleep(2);
+    clean_Vscreen();
+    close_fb();
+}
+
 TEST(System, OpCode0x00E0) {
     init_fb();
     memory[PC] = 0x00;
@@ -271,13 +281,14 @@ TEST(System, OpCode0xCXNN) {
 
 TEST(System, OpCode0xDXYF) {
     init_fb();
-    clean_screen();
     V[0x01] = 0x0F;
     V[0x02] = 0x0A;
     memory[PC] = 0xD1;
     memory[PC + 1] = 0x2F;
     I = 0x0000;
     word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    clean_screen();
+    sleep(2);
     opcode_switch(opcode);
     sleep(2);
     clean_screen();

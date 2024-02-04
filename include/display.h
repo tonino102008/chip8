@@ -8,8 +8,9 @@
 #define MAX_DISP_COL 64
 #define MAX_DISP_ROW 32
 #define MAX_SPRITES 80
-#define MAX_VDISP_COL MAX_DISP_COL * 5
-#define MAX_VDISP_ROW MAX_DISP_ROW * 5
+#define VTPR_RES 5
+#define MAX_VDISP_COL MAX_DISP_COL * VTPR_RES
+#define MAX_VDISP_ROW MAX_DISP_ROW * VTPR_RES
 #define FB_OFF_COL (1024 - MAX_VDISP_COL) / 2
 #define FB_OFF_ROW (768 - MAX_VDISP_ROW) / 2
 #define BLACK 0x00
@@ -40,7 +41,10 @@ extern struct fb_var_screeninfo fbvs;
 void init_fb();
 void close_fb();
 void setPixel(int, int, int); // x, y refers to x, y screen resolution coordinates
+void setVPixel(int, int, int, int, int); // x, y refers to x, y virtual screen resolution coordinates
 void draw_screen();
+void draw_Vscreen();
 void clean_screen();
+void clean_Vscreen();
 
 #endif // DISPLAY_H_

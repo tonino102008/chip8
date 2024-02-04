@@ -89,6 +89,16 @@ void setPixel(int x, int y, int black) {
     *(screen.data + off + screen.b_off) = 0xff * black;
 }
 
+void setVPixel(int offset_x, int offset_y, int x, int y, int black) {
+    x = offset_x + x * VTPR_RES;
+    y = offset_y + y * VTPR_RES;
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            setPixel(x  + i, y + j, black);
+        }
+    }
+}
+
 void draw_screen() {
     for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
         for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
@@ -97,10 +107,26 @@ void draw_screen() {
     }
 }
 
+void draw_Vscreen() {
+    for (int i = 0; i < screen.phys_res_x; i++) {
+        for (int j = 0; j < screen.phys_res_y; j++) {
+            setVPixel(screen.virt_off_x, screen.virt_off_y, i, j, WHITE);
+        }
+    }
+}
+
 void clean_screen() {
     for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
         for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
             setPixel(i, j, BLACK);
+        }
+    }
+}
+
+void clean_Vscreen() {
+    for (int i = 0; i < screen.phys_res_x; i++) {
+        for (int j = 0; j < screen.phys_res_y; j++) {
+            setVPixel(screen.virt_off_x, screen.virt_off_y, i, j, BLACK);
         }
     }
 }
