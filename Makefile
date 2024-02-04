@@ -21,13 +21,14 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # All tests produced by this Makefile.
 TESTS = $(BUILD_DIR)/chip8tests
+MAIN = $(BUILD_DIR)/main
 
 # All Google Test headers.
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
                 $(GTEST_DIR)/include/gtest/internal/*.h
 
 
-all : dir $(TESTS)
+all : dir $(TESTS) $(MAIN)
 
 clean :
 	@ if [ -d "$(BUILD_DIR)" ]; then \
@@ -86,4 +87,15 @@ $(BUILD_DIR)/chip8tests.o : $(TEST_DIR)/chip8tests.cc \
 $(BUILD_DIR)/chip8tests : $(BUILD_DIR)/memory.o $(BUILD_DIR)/stack.o \
 					$(BUILD_DIR)/system.o $(BUILD_DIR)/register.o $(BUILD_DIR)/display.o \
 					$(BUILD_DIR)/chip8tests.o $(BUILD_DIR)/gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+$(BUILD_DIR)/main.o : $(USER_DIR)/main.c $(USER_INCLUDE_DIR)/types.h $(USER_INCLUDE_DIR)/display.h \
+					$(USER_INCLUDE_DIR)/register.h $(USER_INCLUDE_DIR)/stack.h $(USER_INCLUDE_DIR)/memory.h \
+					$(USER_INCLUDE_DIR)/system.h
+	$(CC) $(CFLAGS) -c $(USER_DIR)/main.c
+	@ mv main.o $@
+
+$(BUILD_DIR)/main : $(BUILD_DIR)/memory.o $(BUILD_DIR)/stack.o \
+					$(BUILD_DIR)/system.o $(BUILD_DIR)/register.o $(BUILD_DIR)/display.o \
+					$(BUILD_DIR)/main.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
