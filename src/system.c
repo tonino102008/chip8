@@ -22,7 +22,9 @@ void opcode_switch(word_t opcode) {
                 case 0x00E0:
                     switch (opcode & 0x000F) {
                         case 0x0000:
-                            printf("OpCode: 0x%04x - Not yet implemented.\n", opcode);
+                            printf("OpCode: 0x%04x\n", opcode);
+                            clean_screen();
+                            printf("Screen cleared.\n");
                         break;
                         case 0x000E:
                             printf("OpCode: 0x%04x - PC: %04x - SP: %02x\n", opcode, PC, stack_pointer);
@@ -175,6 +177,16 @@ void opcode_switch(word_t opcode) {
             printf("OpCode: 0x%04x - X = %04x\n", opcode, (opcode & 0x0F00) >> 8);
             V[(opcode & 0x0F00) >> 8] = (byte_t)rand() & (byte_t)(opcode & 0x00FF);
             printf("Result: X = %04x\n", V[(opcode & 0x0F00) >> 8]);
+            break;
+        case 0xD000:
+            printf("OpCode: 0x%04x - X = %04x - Y = %04x\n", opcode, (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
+            //sprite = memory[I + (word_t)i];
+            for (byte_t i = V[(opcode & 0x0F00) >> 8]; i < V[(opcode & 0x0F00) >> 8] + (opcode & 0x000F); i++) {
+                for (byte_t j = V[(opcode & 0x00F0) >> 4]; j < V[(opcode & 0x00F0) >> 4] + 0x08; j++) {
+                    setPixel(i, j, WHITE);
+                }
+            }
+            printf("Screen drawn.\n");
             break;
         case 0xF000:
             switch (opcode & 0x00F0) {

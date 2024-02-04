@@ -7,11 +7,13 @@
 
 #define MAX_DISP_COL 64
 #define MAX_DISP_ROW 32
+#define MAX_SPRITES 80
 #define MAX_VDISP_COL MAX_DISP_COL * 5
 #define MAX_VDISP_ROW MAX_DISP_ROW * 5
 #define FB_OFF_COL (1024 - MAX_VDISP_COL) / 2
 #define FB_OFF_ROW (768 - MAX_VDISP_ROW) / 2
-#define MAX_SPRITES 80
+#define BLACK 0x00
+#define WHITE 0x01
 
 extern byte_t display[MAX_DISP_ROW * MAX_DISP_COL];
 extern byte_t sprites[MAX_SPRITES];

@@ -92,7 +92,7 @@ void setPixel(int x, int y, int black) {
 void draw_screen() {
     for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
         for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
-            setPixel(i, j, 0x00);
+            setPixel(i, j, WHITE);
         }
     }
 }
@@ -100,7 +100,7 @@ void draw_screen() {
 void clean_screen() {
     for (int i = screen.virt_off_x; i < screen.virt_off_x + screen.virt_res_x; i++) {
         for (int j = screen.virt_off_y; j < screen.virt_off_y + screen.virt_res_y; j++) {
-            setPixel(i, j, 0x01);
+            setPixel(i, j, BLACK);
         }
     }
 }

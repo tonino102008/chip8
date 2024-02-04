@@ -28,11 +28,33 @@ TEST(Stack, Init) {
     EXPECT_EQ((word_t)0x0000, I);
 }
 
+TEST(Display, InitMemory) {
+    init_memory();
+    for (int i = 0; i < MAX_SPRITES; i++) EXPECT_EQ(sprites[i], memory[i]);
+}
+
+TEST(Display, InitCloseFb) {
+    init_fb();
+    close_fb();
+}
+
+TEST(Display, DrawFb) {
+    init_fb();
+    clean_screen();
+    sleep(2);
+    draw_screen();
+    sleep(2);
+    clean_screen();
+    close_fb();
+}
+
 TEST(System, OpCode0x00E0) {
+    init_fb();
     memory[PC] = 0x00;
     memory[PC + 1] = 0xE0;
     word_t opcode = (memory[PC] << 8) | memory[PC+1];
     opcode_switch(opcode);
+    close_fb();
 }
 
 TEST(System, OpCode0x00EE) {
@@ -247,6 +269,21 @@ TEST(System, OpCode0xCXNN) {
     opcode_switch(opcode);
 }
 
+TEST(System, OpCode0xDXYF) {
+    init_fb();
+    clean_screen();
+    V[0x01] = 0x0F;
+    V[0x02] = 0x0A;
+    memory[PC] = 0xD1;
+    memory[PC + 1] = 0x2F;
+    I = 0x0000;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+    sleep(2);
+    clean_screen();
+    close_fb();
+}
+
 TEST(System, OpCode0xFX07) {
     V[0x01] = 0x01;
     memory[PC] = 0xF1;
@@ -293,26 +330,6 @@ TEST(System, OpCode0xFX65) {
     memory[PC + 1] = 0x65;
     word_t opcode = (memory[PC] << 8) | memory[PC+1];
     opcode_switch(opcode);
-}
-
-TEST(Display, InitMemory) {
-    init_memory();
-    for (int i = 0; i < MAX_SPRITES; i++) EXPECT_EQ(sprites[i], memory[i]);
-}
-
-TEST(Display, InitCloseFb) {
-    init_fb();
-    close_fb();
-}
-
-TEST(Display, DrawFb) {
-    init_fb();
-    clean_screen();
-    sleep(2);
-    draw_screen();
-    sleep(2);
-    clean_screen();
-    close_fb();
 }
 
 }
