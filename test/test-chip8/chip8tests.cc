@@ -303,6 +303,14 @@ TEST(System, OpCode0xFX07) {
     opcode_switch(opcode);
 }
 
+TEST(System, OpCode0xFX07) {
+    V[0x01] = 0x00;
+    memory[PC] = 0xF1;
+    memory[PC + 1] = 0x0A;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+}
+
 TEST(System, OpCode0xFX15) {
     V[0x01] = 0x01;
     memory[PC] = 0xF1;
@@ -323,6 +331,22 @@ TEST(System, OpCode0xFX1E) {
     V[0x01] = 0x01;
     memory[PC] = 0xF1;
     memory[PC + 1] = 0x1E;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+}
+
+TEST(System, OpCode0xFX29) {
+    V[0x01] = 0x0F;
+    memory[PC] = 0xF1;
+    memory[PC + 1] = 0x29;
+    word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    opcode_switch(opcode);
+}
+
+TEST(System, OpCode0xFX33) {
+    V[0x01] = 0xEE;
+    memory[PC] = 0xF1;
+    memory[PC + 1] = 0x33;
     word_t opcode = (memory[PC] << 8) | memory[PC+1];
     opcode_switch(opcode);
 }

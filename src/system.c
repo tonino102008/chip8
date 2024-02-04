@@ -180,8 +180,8 @@ void opcode_switch(word_t opcode) {
             break;
         case 0xD000: // TO BE CAREFULLY CHECKED
             printf("OpCode: 0x%04x - X = %04x - Y = %04x\n", opcode, (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
-            for (byte_t i = 0x00; i < (opcode & 0x000F); i++) {
-                for (byte_t j = 0x00; j < 0x08; j++) {
+            for (byte_t i = 0x00; i < (opcode & 0x000F); i += 0x01) {
+                for (byte_t j = 0x00; j < 0x08; j += 0x01) {
                     setVPixel(screen.virt_off_x, screen.virt_off_y,
                                 (V[(opcode & 0x00F0) >> 4] + j) % screen.phys_res_x, 
                                 (V[(opcode & 0x0F00) >> 8] + i) % screen.phys_res_y, 
@@ -198,6 +198,15 @@ void opcode_switch(word_t opcode) {
                             printf("OpCode: 0x%04x - X = %02x - DT = %02x\n", opcode, (opcode & 0x0F00) >> 8, delay_timer);
                             V[(opcode & 0x0F00) >> 8] = delay_timer;
                             printf("Result: X = %02x - DT = %02x\n", V[(opcode & 0x0F00) >> 8], delay_timer);
+                            break;
+                        case 0x000A:
+                            printf("OpCode: 0x%04x - X = %02x\n", opcode, (opcode & 0x0F00) >> 8);
+                            scanf("%hc", V[(opcode & 0x0F00) >> 8]);
+                            while (V[(opcode & 0x0F00) >> 8] < '0' && V[(opcode & 0x0F00) >> 8] > 'f') {
+                                printf("The pressed key is not in range 0 - f.\n");
+                                scanf("%hc", V[(opcode & 0x0F00) >> 8]);
+                            }
+                            printf("Result: X = %02x\n", V[(opcode & 0x0F00) >> 8]);
                             break;
                         default:
                             printf("Unsupported OpCode: 0x%04x\n", opcode);
@@ -219,6 +228,34 @@ void opcode_switch(word_t opcode) {
                         case 0x000E:
                             printf("OpCode: 0x%04x - X = %02x - I = %04x\n", opcode, (opcode & 0x0F00) >> 8, I);
                             I += (word_t)V[(opcode & 0x0F00) >> 8];
+                            printf("Result: X = %02x - I = %04x\n", V[(opcode & 0x0F00) >> 8], I);
+                            break;
+                        default:
+                            printf("Unsupported OpCode: 0x%04x\n", opcode);
+                            exit(0);
+                    }
+                    break;
+                case 0x0020:
+                    switch (opcode & 0x000F) {
+                        case 0x0009:
+                            printf("OpCode: 0x%04x - X = %02x - I = %04x\n", opcode, (opcode & 0x0F00) >> 8, I);
+                            I = V[(opcode & 0x0F00) >> 8] * 5;
+                            printf("Result: X = %02x - I = %04x\n", V[(opcode & 0x0F00) >> 8], I);
+                            break;
+                        default:
+                            printf("Unsupported OpCode: 0x%04x\n", opcode);
+                            exit(0);
+                    }
+                    break;
+                case 0x0030:
+                    switch (opcode & 0x000F) {
+                        case 0x0003:
+                            printf("OpCode: 0x%04x - X = %02x - I = %04x\n", opcode, (opcode & 0x0F00) >> 8, I);
+                            memory[I] = V[(opcode & 0x0F00) >> 8] / 100;
+                            int res = V[(opcode & 0x0F00) >> 8] - (memory[I] * 100);
+                            memory[I + 0x0001] = res / 10;
+                            res -= (memory[I + 0x0001] * 10);
+                            memory[I + 0x0002] = res;
                             printf("Result: X = %02x - I = %04x\n", V[(opcode & 0x0F00) >> 8], I);
                             break;
                         default:

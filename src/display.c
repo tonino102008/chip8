@@ -92,13 +92,13 @@ void setPixel(int x, int y, int black) {
 }
 
 void setVPixel(int offset_x, int offset_y, int x, int y, int black) {
-    if (display[x * 64 + y] ^ (byte_t)black != display[x * 64 + y]) V[0x0F] = 0x01;
-    display[x * 64 + y] = display[x * 64 + y] ^ (byte_t)black;
-    x = offset_x + x * VTPR_RES;
-    y = offset_y + y * VTPR_RES;
+    if ((display[x + y * screen.phys_res_x] ^ (byte_t)black) != display[x + y * screen.phys_res_x]) V[0x0F] = 0x01;
+    display[x + y * screen.phys_res_x] = display[x + y * screen.phys_res_x] ^ (byte_t)black;
+    int xV = offset_x + x * VTPR_RES;
+    int yV = offset_y + y * VTPR_RES;
     for (int i = 0; i < VTPR_RES; i++) {
         for (int j = 0; j < VTPR_RES; j++) {
-            setPixel(x + i, y + j, display[x * 64 + y]);
+            setPixel(xV + i, yV + j, display[x + y * screen.phys_res_x]);
         }
     }
 }
