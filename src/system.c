@@ -3,6 +3,7 @@
 #include "../include/stack.h"
 #include "../include/display.h"
 #include "../include/system.h"
+#include "../include/conio.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -201,10 +202,10 @@ void opcode_switch(word_t opcode) {
                             break;
                         case 0x000A:
                             printf("OpCode: 0x%04x - X = %02x\n", opcode, (opcode & 0x0F00) >> 8);
-                            scanf("%hc", V[(opcode & 0x0F00) >> 8]);
+                            V[(opcode & 0x0F00) >> 8] = getche();
                             while (V[(opcode & 0x0F00) >> 8] < '0' && V[(opcode & 0x0F00) >> 8] > 'f') {
                                 printf("The pressed key is not in range 0 - f.\n");
-                                scanf("%hc", V[(opcode & 0x0F00) >> 8]);
+                                V[(opcode & 0x0F00) >> 8] = getche();
                             }
                             printf("Result: X = %02x\n", V[(opcode & 0x0F00) >> 8]);
                             break;

@@ -303,7 +303,7 @@ TEST(System, OpCode0xFX07) {
     opcode_switch(opcode);
 }
 
-TEST(System, OpCode0xFX07) {
+TEST(System, OpCode0xFX0A) {
     V[0x01] = 0x00;
     memory[PC] = 0xF1;
     memory[PC + 1] = 0x0A;
