@@ -46,6 +46,7 @@ void opcode_switch(word_t opcode) {
         case 0x1000:
             printf("OpCode: 0x%04x - PC: %04x\n", opcode, PC);
             PC = opcode & 0x0FFF;
+            PC -= 0x0002;
             printf("Result: PC = %04x\n", PC);
             break;
         case 0x2000:
@@ -181,12 +182,14 @@ void opcode_switch(word_t opcode) {
             break;
         case 0xD000: // TO BE CAREFULLY CHECKED
             printf("OpCode: 0x%04x - X = %04x - Y = %04x\n", opcode, (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
-            for (byte_t i = 0x00; i < (opcode & 0x000F); i += 0x01) {
-                for (byte_t j = 0x00; j < 0x08; j += 0x01) {
+            for (byte_t i = 0x00; i < 0x08; i += 0x01) {
+                int xV = (int)(V[(opcode & 0x0F00) >> 8] + i);
+                xV %= screen.phys_res_x;
+                for (byte_t j = 0x00; j < (opcode & 0x000F); j += 0x01) {
+                    int yV = (int)(V[(opcode & 0x00F0) >> 4] + j);
+                    yV %= screen.phys_res_y;
                     setVPixel(screen.virt_off_x, screen.virt_off_y,
-                                (V[(opcode & 0x00F0) >> 4] + j) % screen.phys_res_x, 
-                                (V[(opcode & 0x0F00) >> 8] + i) % screen.phys_res_y, 
-                                (memory[I + i] >> (0x08 - j)) & 0x01);
+                                xV, yV, (memory[I + j] >> (0x07 - i)) & 0x01);
                 }
             }
             printf("Screen drawn.\n");

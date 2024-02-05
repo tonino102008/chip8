@@ -5,7 +5,7 @@
 #include "../include/register.h"
 #include "../include/display.h"
 
-#include "stdio.h"
+#include "string.h"
 #include "unistd.h"
 
 int main(int argc, char** argv) {
@@ -20,18 +20,22 @@ int main(int argc, char** argv) {
                             0x00, 0xE0, 0x00, 0xE0};
     
     init_memory();
-
+    memcpy(&memory[PC], commands, (size_t)sizeof(commands)/sizeof(byte_t));
     init_fb();
     clean_Vscreen();
     sleep(1);
-    for (int i = 0; i < sizeof(commands)/sizeof(byte_t); i += 2) {
-        memory[PC] = commands[i];
-        memory[PC + 1] = commands[i + 1];
-        word_t opcode = (memory[PC] << 8) | memory[PC+1];
+    word_t tmpPC = 0x0000;
+    while (PC != tmpPC)
+    {
+        word_t opcode = (memory[PC] << 8) | memory[PC + 1];
         opcode_switch(opcode);
         sleep(1);
+        tmpPC = PC;
+        PC += 0x0002;
     }
+    sleep(1);
     clean_Vscreen();
+    sleep(1);
     close_fb();
 
     return 0;
