@@ -19,6 +19,8 @@ int main(int argc, char** argv) {
                             0xF3, 0x00, 0xE3, 0x00, 0x43, 0xE0, 0x00, 0xE0, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 
                             0x00, 0xE0, 0x00, 0xE0};
     
+    for (int i = 0; i < 100; i++) printf("\n"); // CLEAN SCREEN
+
     init_memory();
     memcpy(&memory[PC], commands, (size_t)sizeof(commands)/sizeof(byte_t));
     init_fb();
@@ -27,10 +29,10 @@ int main(int argc, char** argv) {
     word_t tmpPC = 0x0000;
     while (PC != tmpPC)
     {
+        tmpPC = PC;
         word_t opcode = (memory[PC] << 8) | memory[PC + 1];
         opcode_switch(opcode);
         sleep(1);
-        tmpPC = PC;
         PC += 0x0002;
     }
     sleep(1);
