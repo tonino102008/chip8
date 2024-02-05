@@ -45,15 +45,14 @@ void opcode_switch(word_t opcode) {
             break;
         case 0x1000:
             printf("OpCode: 0x%04x - PC: %04x\n", opcode, PC);
-            PC = opcode & 0x0FFF;
-            PC -= 0x0002;
+            PC = (opcode & 0x0FFF) - 0x0002;
             printf("Result: PC = %04x\n", PC);
             break;
         case 0x2000:
             printf("OpCode: 0x%04x - PC: %04x - SP: %02x\n", opcode, PC, stack_pointer);
             stack_pointer += 0x01;
             stack[stack_pointer] = PC;
-            PC = opcode & 0x0FFF;
+            PC = (opcode & 0x0FFF) - 0x0002;
             printf("Result: PC = %04x - SP = %02x\n", PC, stack_pointer);
             break;
         case 0x3000:
