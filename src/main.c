@@ -5,8 +5,10 @@
 #include "../include/register.h"
 #include "../include/display.h"
 
+#include "stdio.h"
 #include "string.h"
 #include "unistd.h"
+#include "time.h"
 
 int main(int argc, char** argv) {
     // byte_t commands[] = {   0x00, 0xE0, 0xA2, 0x2A, 0x60, 0x0C, 0x61, 0x08, 0xD0, 0x1F, 0x70, 0x09, 0xA2, 0x39, 0xD0, 0x1F,
@@ -55,20 +57,43 @@ int main(int argc, char** argv) {
                             0xC1, 0x7C, 0x01, 0x3C, 0x20, 0x12, 0xFC, 0x6A, 0x00, 0x00, 0xEE};
     
     for (int i = 0; i < 100; i++) printf("\n"); // CLEAN SCREEN
-
+    
     init_memory();
     memcpy(&memory[PC], commands, (size_t)sizeof(commands)/sizeof(byte_t));
     init_fb();
     clean_Vscreen();
     sleep(1);
     word_t tmpPC = 0x0000;
+
+    struct timespec now, last_time;
+    double duration = 0.0;
+    double cpu_ticks = 0.0;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &last_time);
+
     while (PC != tmpPC)
-    {
-        tmpPC = PC;
-        word_t opcode = (memory[PC] << 8) | memory[PC + 1];
-        opcode_switch(opcode);
-        usleep(10000);
-        PC += 0x0002;
+    {   
+
+        clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+        duration += (last_time.tv_sec - now.tv_sec) * 1000.0 - (last_time.tv_nsec - now.tv_nsec) / 1000000.0;
+        if (duration >= TICK_FREQ) {
+            cpu_ticks += 1.0;
+            duration = 0.0;
+        } else {
+            clock_gettime(CLOCK_MONOTONIC_RAW, &last_time);
+            continue;
+        }
+
+        if (cpu_ticks < TIMER2CPU) {
+            tmpPC = PC;
+            word_t opcode = (memory[PC] << 8) | memory[PC + 1];
+            opcode_switch(opcode);
+            PC += 0x0002;
+        } else {
+            if (sound_timer > 0) sound_timer -= 0x01;
+            if (delay_timer > 0) delay_timer -= 0x01;
+            cpu_ticks = 0.0;
+        }
+
     }
     sleep(1);
     clean_Vscreen();
