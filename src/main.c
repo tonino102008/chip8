@@ -66,18 +66,18 @@ int main(int argc, char** argv) {
     word_t tmpPC = 0x0000;
 
     struct timespec now, last_time;
-    double duration = 0.0;
-    double cpu_ticks = 0.0;
+    int duration = 0;
+    int cpu_ticks = 0;
     clock_gettime(CLOCK_MONOTONIC_RAW, &last_time);
 
     while (PC != tmpPC)
     {   
 
         clock_gettime(CLOCK_MONOTONIC_RAW, &now);
-        duration += (last_time.tv_sec - now.tv_sec) * 1000.0 - (last_time.tv_nsec - now.tv_nsec) / 1000000.0;
+        duration += (now.tv_sec - last_time.tv_sec) * 1000000.0 + (now.tv_nsec - last_time.tv_nsec) / 1000.0;
         if (duration >= TICK_FREQ) {
-            cpu_ticks += 1.0;
-            duration = 0.0;
+            cpu_ticks += 1;
+            duration = 0;
         } else {
             clock_gettime(CLOCK_MONOTONIC_RAW, &last_time);
             continue;
@@ -91,10 +91,13 @@ int main(int argc, char** argv) {
         } else {
             if (sound_timer > 0) sound_timer -= 0x01;
             if (delay_timer > 0) delay_timer -= 0x01;
-            cpu_ticks = 0.0;
+            cpu_ticks = 0;
         }
 
+        clock_gettime(CLOCK_MONOTONIC_RAW, &last_time);
+
     }
+
     sleep(1);
     clean_Vscreen();
     sleep(1);

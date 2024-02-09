@@ -200,7 +200,7 @@ void opcode_switch(word_t opcode) {
                         case 0x000E:
                             printf("OpCode: 0x%04x - X = %02x - PC = %04x\n", opcode, (opcode & 0x0F00) >> 8, PC);
                             char ch;
-                            do {
+                            if (kbhit()) {
                                 ch = getch();
                                 if (ch >= '0' && ch <= '9') {
                                     ch -= '0';
@@ -211,7 +211,7 @@ void opcode_switch(word_t opcode) {
                                     break;
                                 }
                                 printf("The pressed key %02x is not in range 0 - f.\n", ch);
-                            } while (1);
+                            }
                             if (ch == V[(opcode & 0x0F00) >> 8]) PC += 0x0002;
                             printf("Result: X = %04x - PC = %04x\n", V[(opcode & 0x0F00) >> 8], PC);
                         break;
@@ -225,7 +225,7 @@ void opcode_switch(word_t opcode) {
                         case 0x0001:
                             printf("OpCode: 0x%04x - X = %02x - PC = %04x\n", opcode, (opcode & 0x0F00) >> 8, PC);
                             char ch;
-                            do {
+                            if (kbhit()) {
                                 ch = getch();
                                 if (ch >= '0' && ch <= '9') {
                                     ch -= '0';
@@ -236,7 +236,7 @@ void opcode_switch(word_t opcode) {
                                     break;
                                 }
                                 printf("The pressed key %02x is not in range 0 - f.\n", ch);
-                            } while (1);
+                            }
                             if (ch != V[(opcode & 0x0F00) >> 8]) PC += 0x0002;
                             printf("Result: X = %04x - PC = %04x\n", V[(opcode & 0x0F00) >> 8], PC);
                         break;
@@ -261,7 +261,7 @@ void opcode_switch(word_t opcode) {
                             break;
                         case 0x000A:
                             printf("OpCode: 0x%04x - X = %02x\n", opcode, (opcode & 0x0F00) >> 8);
-                            do {
+                            if (kbhit()) {
                                 V[(opcode & 0x0F00) >> 8] = getch();
                                 if (V[(opcode & 0x0F00) >> 8] >= '0' && V[(opcode & 0x0F00) >> 8] <= '9') {
                                     V[(opcode & 0x0F00) >> 8] -= '0';
@@ -272,7 +272,7 @@ void opcode_switch(word_t opcode) {
                                     break;
                                 }
                                 printf("The pressed key %02x is not in range 0 - f.\n", V[(opcode & 0x0F00) >> 8]);
-                            } while (1);
+                            }
                             printf("Result: X = %02x\n", V[(opcode & 0x0F00) >> 8]);
                             break;
                         default:
